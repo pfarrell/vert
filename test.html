@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body>
+    <script>
+
+      var o= null;
+      var context = null;
+      function start(freq) {
+        context = new AudioContext();
+        o = context.createOscillator()
+        o.type="sawtooth";
+        o.frequency.value = freq
+        var g = context.createGain();
+        g.gain.exponentialRampToValueAtTime( 0.00001, context.currentTime + 10 )
+        o.connect(g);
+        g.connect(context.destination)
+        o.start()
+      }
+      function stop() {
+        /*o.stop()*/
+      }
+    </script>
+    <div class="keyboard">
+      <div class="ivory" onmouseover="javascript:start(261.6)" onmouseout="javascript:stop()"></div>
+      <div class="ebony" onmouseover="javascript:start(277.2)" onmouseout="javascript:stop()"></div>
+      <div class="ivory" onmouseover="javascript:start(293.7)" onmouseout="javascript:stop()"></div>
+      <div class="ebony" onmouseover="javascript:start(311.1)" onmouseout="javascript:stop()"></div>
+      <div class="ivory" onmouseover="javascript:start(329.6)" onmouseout="javascript:stop()"></div>
+      <div class="ivory" onmouseover="javascript:start(349.2)" onmouseout="javascript:stop()"></div>
+      <div class="ebony" onmouseover="javascript:start(370.0)" onmouseout="javascript:stop()"></div>
+      <div class="ivory" onmouseover="javascript:start(392.0)" onmouseout="javascript:stop()"></div>
+      <div class="ebony" onmouseover="javascript:start(415.3)" onmouseout="javascript:stop()"></div>
+      <div class="ivory" onmouseover="javascript:start(440.0)" onmouseout="javascript:stop()"></div>
+      <div class="ebony" onmouseover="javascript:start(466.2)" onmouseout="javascript:stop()"></div>
+      <div class="ivory" onmouseover="javascript:start(493.9)" onmouseout="javascript:stop()"></div>
+      <div class="ivory" onmouseover="javascript:start(523.3)" onmouseout="javascript:stop()"></div>
+    </div>
+  </body>
+</html>
