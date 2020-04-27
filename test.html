@@ -8,35 +8,160 @@
 
       var o= null;
       var context = null;
-      function start(freq) {
+      var waveform = 'triangle';
+      var decay = 1.0;
+      var lkup={"C0":16.35,"C#0":17.32,"D0":18.35,"D#0":19.45,"E0":20.60,"F0":21.83,"F#0":23.12,"G0":24.50,
+        "G#0":25.96,"A0":27.50,"A#0":29.14,"B0":30.87,"C1":32.70,"C#1":34.65,"D1":36.71,"D#1":38.89,
+        "E1":41.20,"F1":43.65,"F#1":46.25,"G1":49.00,"G#1":51.91,"A1":55.00,"A#1":58.27,"B1":61.74,
+        "C2":65.41,"C#2":69.30,"D2":73.42,"D#2":77.78,"E2":82.41,"F2":87.31,"F#2":92.50,"G2":98.00,
+        "G#2":103.8,"A2":110.0,"A#2":116.5,"B2":123.5,"C3":130.8,"C#3":138.6,"D3":146.8,"D#3":155.6,
+        "E3":164.8,"F3":174.6,"F#3":185.0,"G3":196.0,"G#3":207.7,"A3":220.0,"A#3":233.1,"B3":246.9,
+        "C4":261.6,"C#4":277.2,"D4":293.7,"D#4":311.1,"E4":329.6,"F4":349.2,"F#4":370.0,"G4":392.0,
+        "G#4":415.3,"A4":440.0,"A#4":466.2,"B4":493.9,"C5":523.3,"C#5":554.4,"D5":587.3,"D#5":622.3,
+        "E5":659.3,"F5":698.5,"F#5":740.0,"G5":784.0,"G#5":830.6,"A5":880.0,"A#5":932.3,"B5":987.8,
+        "C6":1047,"C#6":1109,"D6":1175,"D#6":1245,"E6":1319,"F6":1397,"F#6":1480,"G6":1568,"G#6":1661,
+        "A6":1760,"A#6":1865,"B6":1976,"C7":2093,"C#7":2217,"D7":2349,"D#7":2489,"E7":2637,"F7":2794,
+        "F#7":2960,"G7":3136,"G#7":3322,"A7":3520,"A#7":3729,"B7":3951,"C8":4186,"C#8":4435,"D8":4699,
+        "D#8":4978,"E8":5274,"F8":5588,"F#8":5920,"G8":6272,"G#8":6645,"A8":7040,"A#8":7459,"B8":7902};
+
+      function f(str) {
+        return lkup[str];
+      }
+
+      function updateWaveform(str) {
+        waveform = str;
+      }
+
+      function updateDecay(num) {
+        var slider = document.getElementById("decayRange");
+        var output = document.getElementById("decayDisplay");
+        output.innerHTML = slider.value; // Display the default slider value
+
+        // Update the current slider value (each time you drag the slider handle)
+        slider.oninput = function() {
+          output.innerHTML = this.value;
+        }
+        decay = num;
+      }
+
+      function start(note) {
+        console.log(note + ": " + waveform);
+        var freq = f(note);
         context = new AudioContext();
-        o = context.createOscillator()
-        o.type="sawtooth";
-        o.frequency.value = freq
+        o = context.createOscillator();
+        o.type=waveform;
+        o.frequency.value = freq;
         var g = context.createGain();
-        g.gain.exponentialRampToValueAtTime( 0.00001, context.currentTime + 10 )
+        g.gain.exponentialRampToValueAtTime(0.00001, context.currentTime + decay)
         o.connect(g);
         g.connect(context.destination)
         o.start()
       }
+
       function stop() {
-        /*o.stop()*/
+        //o.stop()
       }
+
     </script>
-    <div class="keyboard">
-      <div class="ivory" onmouseover="javascript:start(261.6)" onmouseout="javascript:stop()"></div>
-      <div class="ebony" onmouseover="javascript:start(277.2)" onmouseout="javascript:stop()"></div>
-      <div class="ivory" onmouseover="javascript:start(293.7)" onmouseout="javascript:stop()"></div>
-      <div class="ebony" onmouseover="javascript:start(311.1)" onmouseout="javascript:stop()"></div>
-      <div class="ivory" onmouseover="javascript:start(329.6)" onmouseout="javascript:stop()"></div>
-      <div class="ivory" onmouseover="javascript:start(349.2)" onmouseout="javascript:stop()"></div>
-      <div class="ebony" onmouseover="javascript:start(370.0)" onmouseout="javascript:stop()"></div>
-      <div class="ivory" onmouseover="javascript:start(392.0)" onmouseout="javascript:stop()"></div>
-      <div class="ebony" onmouseover="javascript:start(415.3)" onmouseout="javascript:stop()"></div>
-      <div class="ivory" onmouseover="javascript:start(440.0)" onmouseout="javascript:stop()"></div>
-      <div class="ebony" onmouseover="javascript:start(466.2)" onmouseout="javascript:stop()"></div>
-      <div class="ivory" onmouseover="javascript:start(493.9)" onmouseout="javascript:stop()"></div>
-      <div class="ivory" onmouseover="javascript:start(523.3)" onmouseout="javascript:stop()"></div>
-    </div>
+    <ul class="set">
+      <li class="white a" onmouseover="javascript:start('A0')" onmouseout="javascript:stop()"></li>
+      <li class="black as" onmouseover="javascript:start('A#0')" onmouseout="javascript:stop()"></li>
+      <li class="white b" onmouseover="javascript:start('B0')" onmouseout="javascript:stop()"></li>
+      <li class="white c" onmouseover="javascript:start('C1')" onmouseout="javascript:stop()"></li>
+      <li class="black cs" onmouseover="javascript:start('C#1')" onmouseout="javascript:stop()"></li>
+      <li class="white d" onmouseover="javascript:start('D1')" onmouseout="javascript:stop()"></li>
+      <li class="black ds" onmouseover="javascript:start('D#1')" onmouseout="javascript:stop()"></li>
+      <li class="white e" onmouseover="javascript:start('E1')" onmouseout="javascript:stop()"></li>
+      <li class="white f" onmouseover="javascript:start('F1')" onmouseout="javascript:stop()"></li>
+      <li class="black fs" onmouseover="javascript:start('F#1')" onmouseout="javascript:stop()"></li>
+      <li class="white g" onmouseover="javascript:start('G1')" onmouseout="javascript:stop()"></li>
+      <li class="black gs" onmouseover="javascript:start('G#1')" onmouseout="javascript:stop()"></li>
+      <li class="white a" onmouseover="javascript:start('A1')" onmouseout="javascript:stop()"></li>
+      <li class="black as" onmouseover="javascript:start('A#1')" onmouseout="javascript:stop()"></li>
+      <li class="white b" onmouseover="javascript:start('B1')" onmouseout="javascript:stop()"></li>
+      <li class="white c" onmouseover="javascript:start('C2')" onmouseout="javascript:stop()"></li>
+      <li class="black cs" onmouseover="javascript:start('C#2')" onmouseout="javascript:stop()"></li>
+      <li class="white d" onmouseover="javascript:start('D2')" onmouseout="javascript:stop()"></li>
+      <li class="black ds" onmouseover="javascript:start('D#2')" onmouseout="javascript:stop()"></li>
+      <li class="white e" onmouseover="javascript:start('E2')" onmouseout="javascript:stop()"></li>
+      <li class="white f" onmouseover="javascript:start('F2')" onmouseout="javascript:stop()"></li>
+      <li class="black fs" onmouseover="javascript:start('F#2')" onmouseout="javascript:stop()"></li>
+      <li class="white g" onmouseover="javascript:start('G2')" onmouseout="javascript:stop()"></li>
+      <li class="black gs" onmouseover="javascript:start('G#2')" onmouseout="javascript:stop()"></li>
+      <li class="white a" onmouseover="javascript:start('A2')" onmouseout="javascript:stop()"></li>
+      <li class="black as" onmouseover="javascript:start('A#2')" onmouseout="javascript:stop()"></li>
+      <li class="white b" onmouseover="javascript:start('B2')" onmouseout="javascript:stop()"></li>
+      <li class="white c" onmouseover="javascript:start('C3')" onmouseout="javascript:stop()"></li>
+      <li class="black cs" onmouseover="javascript:start('C#3')" onmouseout="javascript:stop()"></li>
+      <li class="white d" onmouseover="javascript:start('D3')" onmouseout="javascript:stop()"></li>
+      <li class="black ds" onmouseover="javascript:start('D#3')" onmouseout="javascript:stop()"></li>
+      <li class="white e" onmouseover="javascript:start('E3')" onmouseout="javascript:stop()"></li>
+      <li class="white f" onmouseover="javascript:start('F3')" onmouseout="javascript:stop()"></li>
+      <li class="black fs" onmouseover="javascript:start('F#3')" onmouseout="javascript:stop()"></li>
+      <li class="white g" onmouseover="javascript:start('G3')" onmouseout="javascript:stop()"></li>
+      <li class="black gs" onmouseover="javascript:start('G#3')" onmouseout="javascript:stop()"></li>
+      <li class="white a" onmouseover="javascript:start('A3')" onmouseout="javascript:stop()"></li>
+      <li class="black as" onmouseover="javascript:start('A#3')" onmouseout="javascript:stop()"></li>
+      <li class="white b" onmouseover="javascript:start('B3')" onmouseout="javascript:stop()"></li>
+      <li class="white c" onmouseover="javascript:start('C4')" onmouseout="javascript:stop()"></li>
+      <li class="black cs" onmouseover="javascript:start('C#4')" onmouseout="javascript:stop()"></li>
+      <li class="white d" onmouseover="javascript:start('D4')" onmouseout="javascript:stop()"></li>
+      <li class="black ds" onmouseover="javascript:start('D#4')" onmouseout="javascript:stop()"></li>
+      <li class="white e" onmouseover="javascript:start('E4')" onmouseout="javascript:stop()"></li>
+      <li class="white f" onmouseover="javascript:start('F4')" onmouseout="javascript:stop()"></li>
+      <li class="black fs" onmouseover="javascript:start('F#4')" onmouseout="javascript:stop()"></li>
+      <li class="white g" onmouseover="javascript:start('G4')" onmouseout="javascript:stop()"></li>
+      <li class="black gs" onmouseover="javascript:start('G#4')" onmouseout="javascript:stop()"></li>
+      <li class="white a" onmouseover="javascript:start('A4')" onmouseout="javascript:stop()"></li>
+      <li class="black as" onmouseover="javascript:start('A#4')" onmouseout="javascript:stop()"></li>
+      <li class="white b" onmouseover="javascript:start('B4')" onmouseout="javascript:stop()"></li>
+      <li class="white c" onmouseover="javascript:start('C5')" onmouseout="javascript:stop()"></li>
+      <li class="black cs" onmouseover="javascript:start('C#5')" onmouseout="javascript:stop()"></li>
+      <li class="white d" onmouseover="javascript:start('D5')" onmouseout="javascript:stop()"></li>
+      <li class="black ds" onmouseover="javascript:start('D#5')" onmouseout="javascript:stop()"></li>
+      <li class="white e" onmouseover="javascript:start('E5')" onmouseout="javascript:stop()"></li>
+      <li class="white f" onmouseover="javascript:start('F5')" onmouseout="javascript:stop()"></li>
+      <li class="black fs" onmouseover="javascript:start('F#5')" onmouseout="javascript:stop()"></li>
+      <li class="white g" onmouseover="javascript:start('G5')" onmouseout="javascript:stop()"></li>
+      <li class="black gs" onmouseover="javascript:start('G#5')" onmouseout="javascript:stop()"></li>
+      <li class="white a" onmouseover="javascript:start('A5')" onmouseout="javascript:stop()"></li>
+      <li class="black as" onmouseover="javascript:start('A#5')" onmouseout="javascript:stop()"></li>
+      <li class="white b" onmouseover="javascript:start('B5')" onmouseout="javascript:stop()"></li>
+      <li class="white c" onmouseover="javascript:start('C6')" onmouseout="javascript:stop()"></li>
+      <li class="black cs" onmouseover="javascript:start('C#6')" onmouseout="javascript:stop()"></li>
+      <li class="white d" onmouseover="javascript:start('D6')" onmouseout="javascript:stop()"></li>
+      <li class="black ds" onmouseover="javascript:start('D#6')" onmouseout="javascript:stop()"></li>
+      <li class="white e" onmouseover="javascript:start('E6')" onmouseout="javascript:stop()"></li>
+      <li class="white f" onmouseover="javascript:start('F6')" onmouseout="javascript:stop()"></li>
+      <li class="black fs" onmouseover="javascript:start('F#6')" onmouseout="javascript:stop()"></li>
+      <li class="white g" onmouseover="javascript:start('G6')" onmouseout="javascript:stop()"></li>
+      <li class="black gs" onmouseover="javascript:start('G#6')" onmouseout="javascript:stop()"></li>
+      <li class="white a" onmouseover="javascript:start('A6')" onmouseout="javascript:stop()"></li>
+      <li class="black as" onmouseover="javascript:start('A#6')" onmouseout="javascript:stop()"></li>
+      <li class="white b" onmouseover="javascript:start('B6')" onmouseout="javascript:stop()"></li>
+      <li class="white c" onmouseover="javascript:start('C7')" onmouseout="javascript:stop()"></li>
+      <li class="black cs" onmouseover="javascript:start('C#7')" onmouseout="javascript:stop()"></li>
+      <li class="white d" onmouseover="javascript:start('D7')" onmouseout="javascript:stop()"></li>
+      <li class="black ds" onmouseover="javascript:start('D#7')" onmouseout="javascript:stop()"></li>
+      <li class="white e" onmouseover="javascript:start('E7')" onmouseout="javascript:stop()"></li>
+      <li class="white f" onmouseover="javascript:start('F7')" onmouseout="javascript:stop()"></li>
+      <li class="black fs" onmouseover="javascript:start('F#7')" onmouseout="javascript:stop()"></li>
+      <li class="white g" onmouseover="javascript:start('G7')" onmouseout="javascript:stop()"></li>
+      <li class="black gs" onmouseover="javascript:start('G#7')" onmouseout="javascript:stop()"></li>
+      <li class="white a" onmouseover="javascript:start('A7')" onmouseout="javascript:stop()"></li>
+      <li class="black as" onmouseover="javascript:start('A#7')" onmouseout="javascript:stop()"></li>
+      <li class="white b" onmouseover="javascript:start('B7')" onmouseout="javascript:stop()"></li>
+      <li class="white c" onmouseover="javascript:start('C8')" onmouseout="javascript:stop()"></li>
+    </ul>
+
+    <select onchange="javascript:updateWaveform(this.value)">
+      <option value="sine">sine</option>
+      <option value="square">square</option>
+      <option value="triangle" selected>triangle</option>
+      <option value="sawtooth">sawtooth</option>
+    </select>
+    <input id="decayRange" onchange="javascript:updateDecay(this.value)" type="range" min="0.1" max="5" value="1" step='0.1'>
+    <span id="decayDisplay" style="color:white">1.0</span>
+
   </body>
 </html>
